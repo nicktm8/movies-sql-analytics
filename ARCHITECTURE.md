@@ -4,9 +4,7 @@
 
 A self-contained analytics project built on a normalized SQLite database.
 Raw CSV data is loaded into a relational schema via `db.py`, then queried
-through `analysis.py` using SQL and Python (pandas, Matplotlib, Seaborn)
-to produce financial and production insights for the fictional company
-**MovieBox Analytics**.
+through `analysis.py` using SQL and Python (pandas, Matplotlib, Seaborn).
 
 ---
 
