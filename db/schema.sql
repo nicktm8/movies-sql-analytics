@@ -35,7 +35,7 @@ create table `movie_languages` (
 `movie_id` int not null,
 primary key (`language_id`,`movie_id`),
 constraint `fk_language_id`
-foreign key (`language_id`) references `task2_movies_db`.`language` (`language_id`) on update cascade on delete cascade,
+foreign key (`language_id`) references `language` (`language_id`) on update cascade on delete cascade,
 constraint `fk_ml_movie_id` 
 foreign key (`movie_id`) references `movie` (`movie_id`) on update cascade on delete cascade
 );
