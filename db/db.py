@@ -1,4 +1,5 @@
 import sqlite3
+import pandas as pd
 
 def get_connection():
     '''Returns a connection to the SQLite database. If the database file does not exist, it will be created.'''
@@ -108,4 +109,10 @@ def create_tables(conn):
     
     cursor.close()
 
-   
+def insert_data(conn):
+    df = pd.read_csv('data/movies.csv')
+    
+    movie_columns = ["title", "release_year", "duration", "budget", "box_office"]
+    df_movie = df[movie_columns]
+    df_movie.to_sql('movie', conn, if_exists='append', index=False)
+     
