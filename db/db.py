@@ -24,28 +24,28 @@ def create_tables(conn):
     conn.execute('''
         create table if not exists language (
             language_id integer primary key,
-            name text not null
+            name text unique not null
             )
         ''')
     
     conn.execute('''
         create table if not exists country (
             country_id integer primary key,
-            name text not null
+            name text unique not null
             )
         ''')
     
     conn.execute('''
         create table if not exists genre (
             genre_id integer primary key,
-            name text not null
+            name text unique not null
             )
         ''')
     
     conn.execute('''
         create table if not exists director(
             director_id integer primary key,
-            name text not null
+            name text unique not null
             )
         ''')
     
@@ -115,4 +115,5 @@ def insert_data(conn):
     movie_columns = ["title", "release_year", "duration", "budget", "box_office"]
     df_movie = df[movie_columns]
     df_movie.to_sql('movie', conn, if_exists='append', index=False)
-     
+    
+ 
