@@ -12,22 +12,22 @@ create table `movie` (
 
 create table `language` (
 `language_id` int primary key auto_increment,
-`name` varchar(100) not null
+`name` varchar(100) unique not null
 );
 
 create table `country` (
 `country_id` int primary key auto_increment,
-`name` varchar(100) not null
+`name` varchar(100) unique not null
 );
 
 create table `genre` (
 `genre_id` int primary key auto_increment,
-`name` varchar(100) not null
+`name` varchar(100) unique not null
 );
 
 create table `director` (
 `director_id` int primary key auto_increment,
-`name` varchar(100) not null
+`name` varchar(100) unique not null
 );
 
 create table `movie_languages` (
