@@ -19,7 +19,7 @@ def create_tables(conn):
     conn.execute('''
         create table if not exists movie (
             movie_id integer primary key,
-            title text not null,
+            title text unique not null,
             release_year integer,
             duration integer,
             budget real,
@@ -174,5 +174,5 @@ def main():
     
     finally:
         conn.close()
-    
+
 main()
