@@ -114,8 +114,8 @@ def create_tables(conn):
 def insert_data(conn):
     df = pd.read_csv('data/movies.csv')
         
-    movie_columns = ["title", "release_year", "duration", "budget", "box_office"]
-    df_movie = df[movie_columns].drop_duplicates(subset=["title", "release_year"])
+    movie_columns = ['title', 'release_year', 'duration', 'budget', 'box_office']
+    df_movie = df[movie_columns].drop_duplicates(subset=['title', 'release_year'])
     df_movie.to_sql('movie', conn, if_exists='append', index=False)
         
     for i, row in df.iterrows():
@@ -152,9 +152,15 @@ def insert_data(conn):
     conn.commit()
 
 def main():
-    conn = get_connection()
-    create_tables(conn)
-    insert_data(conn)
-    conn.close()
+    try:
+        conn = get_connection()
+        create_tables(conn)
+        insert_data(conn)
+        
+    except Exception as e:
+        print(f'Error: {e}')
+    
+    finally:
+        conn.close()
     
 main()
