@@ -6,11 +6,15 @@ def get_connection():
     
     conn = sqlite3.connect('db/movies.db')
     conn.execute('PRAGMA foreign_keys = ON')
+    
+    print('Connection established to SQLite database.')
         
     return conn
 
 def create_tables(conn):
     cursor = conn.cursor()
+    
+    print('Creating tables if they do not exist...')
         
     conn.execute('''
         create table if not exists movie (
@@ -110,13 +114,19 @@ def create_tables(conn):
     conn.commit()
     
     cursor.close()
+    
+    print('Tables created successfully.')
 
 def insert_data(conn):
     df = pd.read_csv('data/movies.csv')
+    
+    print(f'✓ Loaded CSV with: {df.shape[0]} rows and {df.shape[1]} columns.')
         
     movie_columns = ['title', 'release_year', 'duration', 'budget', 'box_office']
     df_movie = df[movie_columns].drop_duplicates(subset=['title', 'release_year'])
     df_movie.to_sql('movie', conn, if_exists='append', index=False)
+    
+    print(f'Inserted {len(df_movie)} unique movies into movie table.')
         
     for i, row in df.iterrows():
         movie_id = conn.execute('select movie_id from movie where title = ? and release_year = ?', (row['title'], row['release_year'])).fetchone()[0]
@@ -150,6 +160,8 @@ def insert_data(conn):
                 conn.execute('INSERT OR IGNORE INTO movie_directors VALUES (?, ?)', (director_id, movie_id))
         
     conn.commit()
+    
+    print(f'Inserted data for {len(df)} movies into language, country, genre, and director tables.')
 
 def main():
     try:
