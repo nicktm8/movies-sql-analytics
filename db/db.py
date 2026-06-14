@@ -12,7 +12,6 @@ def get_connection():
     return conn
 
 def create_tables(conn):
-    cursor = conn.cursor()
     
     print('Creating tables if they do not exist...')
         
@@ -113,8 +112,6 @@ def create_tables(conn):
     
     conn.commit()
     
-    cursor.close()
-    
     print('Tables created successfully.')
 
 def insert_data(conn):
@@ -173,7 +170,10 @@ def main():
         print(f'Error: {e}')
     
     finally:
-        conn.close()
+        try:
+            conn.close()
+        except Exception as e:
+            print(f'Connection unavailable: {e}')
 
 if __name__ == '__main__':
     main()
