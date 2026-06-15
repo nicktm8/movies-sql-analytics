@@ -3,7 +3,7 @@ use `movies_db`;
 
 create table `movie` (
 `movie_id` int primary key auto_increment,
-`title` varchar(255) not null,
+`title` varchar(255) unique not null,
 `release_year` year,
 `duration` smallint,
 `budget` decimal(15,2),
