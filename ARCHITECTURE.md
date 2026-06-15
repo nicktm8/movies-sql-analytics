@@ -87,7 +87,8 @@ Responsible for all database setup and data loading.
 |--------------------|--------------------------------------------------|
 | `get_connection()` | Returns a `sqlite3.Connection` to `movies.db`    |
 | `create_tables()`  | Executes DDL — creates all 9 tables if not exist |
-| `insert_data(df)`  | Reads CSV via pandas, populates all tables       |
+| `insert_data()`    | Reads CSV via pandas, populates all tables       |
+| `main()`           | Runs db.py script                                |
 
 ### `analysis.py`
 
