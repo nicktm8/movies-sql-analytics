@@ -1,6 +1,9 @@
 import db
 
-def test():
+def setup_db():
+    """Setup function to check the database connection and existence of tables. 
+    If the database does not exist, it will create the database and insert data."""
+    
     try:
         conn = db.get_connection()
         test_query = "SELECT name FROM sqlite_master WHERE type='table' AND name='movie';"
@@ -41,4 +44,4 @@ def test():
         except Exception as e:
             print(f'Connection unavailable: {e}')
 
-test()
+setup_db()
