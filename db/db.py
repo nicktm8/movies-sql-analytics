@@ -2,7 +2,7 @@ import sqlite3
 import pandas as pd
 
 def get_connection():
-    '''Returns a connection to the SQLite database. If the database file does not exist, it will be created.'''
+    """Returns a connection to the SQLite database. If the database file does not exist, it will be created."""
     
     conn = sqlite3.connect('db/movies.db')
     conn.execute('PRAGMA foreign_keys = ON')
@@ -12,6 +12,7 @@ def get_connection():
     return conn
 
 def create_tables(conn):
+    """Creates the tables in the SQLite database if they do not already exist."""
     
     print('Creating tables if they do not exist...')
         
@@ -115,6 +116,8 @@ def create_tables(conn):
     print('Tables created successfully.')
 
 def insert_data(conn):
+    """Inserts data from the CSV file into the SQLite database."""
+    
     df = pd.read_csv('data/movies.csv')
     
     print(f'✓ Loaded CSV with: {df.shape[0]} rows and {df.shape[1]} columns.')
@@ -161,6 +164,8 @@ def insert_data(conn):
     print(f'Inserted data for {len(df)} movies into language, country, genre, and director tables.')
 
 def main():
+    """Main function to create the database and insert data."""
+    
     try:
         conn = get_connection()
         create_tables(conn)
