@@ -3,7 +3,7 @@
 ## Overview
 
 A self-contained analytics project built on a normalized SQLite database.
-Raw CSV data is loaded into a relational schema via `db.py`, then queried
+Raw CSV data is loaded into a relational schema via `database.py`, then queried
 through `analysis.py` using SQL and Python (pandas, Matplotlib, Seaborn)
 to produce financial and production insights.
 
@@ -18,7 +18,7 @@ movies-sql-analytics/
 │   └── movies.csv              # Source dataset (raw movie data)
 │
 ├── db/
-│   ├── db.py                   # get_connection(), create_tables(), insert_data(), main()
+│   ├── database.py             # get_connection(), create_tables(), insert_data(), main()
 │   ├── setup_db.py             # Entry point — verifies and initializes the database
 │   └── schema.sql              # DDL reference (CREATE TABLE statements)
 │
@@ -44,7 +44,7 @@ movies.csv
     |
     | pandas read_csv
     v
-db/db.py ──── CREATE TABLE / INSERT ────> movies.db (SQLite)
+db/database.py ──── CREATE TABLE / INSERT ────> movies.db (SQLite)
                                                |
                                                | pd.read_sql_query
                                                v
@@ -58,7 +58,7 @@ db/db.py ──── CREATE TABLE / INSERT ────> movies.db (SQLite)
 ```
 
 > `db/setup_db.py` acts as a guard before `analysis.py` — it verifies
-> that the database exists and contains data, and calls `db.py` to
+> that the database exists and contains data, and calls `database.py` to
 > initialize it if not.
 
 ---
@@ -94,7 +94,7 @@ movie ──────────────── movie_genres ────
 
 ## Module Descriptions
 
-### `db/db.py`
+### `db/database.py`
 
 Responsible for database creation and data loading.
 
@@ -119,7 +119,7 @@ exists and contains data. If not, calls `db.create_tables()` and
 ### `analysis.py`
 
 Executes four analytical queries and produces visualizations.
-Assumes the database has been initialized via `setup_db.py` or `db.py`.
+Assumes the database has been initialized via `setup_db.py` or `database.py`.
 
 | Section                        | SQL features used              | Python output                  |
 |--------------------------------|--------------------------------|--------------------------------|
@@ -152,7 +152,7 @@ to multiple genres) are resolved through explicit junction tables rather
 than storing comma-separated values, ensuring the schema is in 3NF.
 
 **Separation of concerns** — Three distinct modules with clear responsibilities:
-`db.py` creates and populates the database, `setup_db.py` verifies and
+`database.py` creates and populates the database, `setup_db.py` verifies and
 initializes it as an entry point, and `analysis.py` reads and analyzes data.
 This follows the same modular pattern used in the `movies-omdb-enrichment`
 pipeline.
