@@ -33,7 +33,7 @@ movies-sql-analytics/
 ```
 
 > `movies.db` is excluded from version control — it is generated locally
-> by running `db/setup_db.py`. See [Getting Started](#getting-started) in README.
+> by running `db/setup_db.py`. See [Getting Started](README.md#getting-started) in README.
 
 ---
 
