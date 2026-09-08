@@ -18,8 +18,7 @@ movies-sql-analytics/
 │   └── movies.csv              # Source dataset (raw movie data)
 │
 ├── db/
-│   ├── database.py             # get_connection(), create_tables(), insert_data(), main()
-│   ├── setup_db.py             # Entry point — verifies and initializes the database
+│   ├── database.py             # get_connection(), create_tables(), insert_data(), setup_db()
 │   └── schema.sql              # DDL reference (CREATE TABLE statements)
 │
 ├── output/
@@ -33,7 +32,8 @@ movies-sql-analytics/
 ```
 
 > `movies.db` is excluded from version control — it is generated locally
-> by running `db/setup_db.py`. See [Getting Started](README.md#getting-started) in README.
+> by running `python analysis.py` (which calls `setup_db()` automatically)
+> or directly via `python db/database.py`. See [Getting Started](README.md#getting-started) in README.
 
 ---
 
@@ -45,21 +45,20 @@ movies.csv
     | pandas read_csv
     v
 db/database.py ──── CREATE TABLE / INSERT ────> movies.db (SQLite)
-                                               |
-                                               | pd.read_sql_query
-                                               v
-                                         analysis.py
-                                               |
-                              +----------------+----------------+
-                              |                                 |
-                        pandas aggregation             Matplotlib / Seaborn
-                              |                                 |
-                        Terminal output                   output/*.png
+                                                      |
+                                                      | pd.read_sql_query
+                                                      v
+                                                analysis.py
+                                                      |
+                                   +------------------+------------------+
+                                   |                                     |
+                             pandas aggregation               Matplotlib / Seaborn
+                                   |                                     |
+                             Terminal output                       output/*.png
 ```
 
-> `db/setup_db.py` acts as a guard before `analysis.py` — it verifies
-> that the database exists and contains data, and calls `database.py` to
-> initialize it if not.
+> `setup_db()` in `database.py` acts as a guard — it verifies that the
+> database exists and contains data before `analysis.py` runs any queries.
 
 ---
 
@@ -96,30 +95,20 @@ movie ──────────────── movie_genres ────
 
 ### `db/database.py`
 
-Responsible for database creation and data loading.
+Single entry point for all database operations — connection, schema creation,
+data loading, and initialization guard.
 
-| Function              | Description                                                                                       |
-|-----------------------|---------------------------------------------------------------------------------------------------|
-| `get_connection()`.   | Returns a `sqlite3.Connection` to `movies.db`                                                     |
-| `create_tables(conn)` | Executes DDL — creates all 9 tables if not exist                                                  |
-| `insert_data(conn)`   | Reads CSV via pandas, populates all tables                                                        |
-| `main()`              | Orchestrates connection, table creation, and data loading — for standalone use via `python db.py` |
-
-### `db/setup_db.py`
-
-Entry point to be run before `analysis.py`. Verifies that the database
-exists and contains data. If not, calls `db.create_tables()` and
-`db.insert_data()` to initialize it. Also prints database statistics
-(row counts per table) as a quick sanity check.
-
-| Function     | Description                                                                 |
-|--------------|-----------------------------------------------------------------------------|
-| `setup_db()` | Checks for existing tables, initializes database if necessary, prints stats |
+| Function              | Description                                                                     |
+|-----------------------|---------------------------------------------------------------------------------|
+| `get_connection()`    | Returns a `sqlite3.Connection` to `movies.db`                                   |
+| `create_tables(conn)` | Executes DDL — creates all 9 tables if they do not exist                        |
+| `insert_data(conn)`   | Reads CSV via pandas, populates all tables                                      |
+| `setup_db()`          | Verifies database exists and contains data; initializes it if not; prints stats |
 
 ### `analysis.py`
 
 Executes four analytical queries and produces visualizations.
-Assumes the database has been initialized via `setup_db.py` or `database.py`.
+Calls `setup_db()` at startup to ensure the database is ready before any queries run.
 
 | Section                        | SQL features used              | Python output                  |
 |--------------------------------|--------------------------------|--------------------------------|
@@ -144,20 +133,20 @@ Assumes the database has been initialized via `setup_db.py` or `database.py`.
 ## Design Decisions
 
 **SQLite over MySQL** — No server required. The database is fully
-reproducible from `movies.csv` by running `db/setup_db.py`, making the
+reproducible from `movies.csv` by running `analysis.py`, making the
 project portable and easy to run locally without any configuration.
 
 **Junction tables** — Many-to-many relationships (e.g. a film can belong
 to multiple genres) are resolved through explicit junction tables rather
 than storing comma-separated values, ensuring the schema is in 3NF.
 
-**Separation of concerns** — Three distinct modules with clear responsibilities:
-`database.py` creates and populates the database, `setup_db.py` verifies and
-initializes it as an entry point, and `analysis.py` reads and analyzes data.
-This follows the same modular pattern used in the `movies-omdb-enrichment`
-pipeline.
+**Single database module** — All database logic is consolidated in
+`db/database.py` (`get_connection`, `create_tables`, `insert_data`,
+`setup_db`). An earlier iteration had a separate `setup_db.py` module,
+but this caused import path conflicts between the `db/` package and
+the `db.py` module name. Consolidating into one module simplified imports
+and removed the naming ambiguity.
 
-**`setup_db.py` over `test_db.py`** — The module was renamed from `test_db.py`
-to better reflect its actual responsibility: initializing the database for use,
-not running unit tests. The `test_` prefix conventionally implies a testing
-framework such as `pytest`.
+**Separation of concerns** — Database logic (`database.py`) is isolated
+from analysis logic (`analysis.py`), following the same modular pattern
+used in the `movies-omdb-enrichment` pipeline.
