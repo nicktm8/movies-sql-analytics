@@ -26,6 +26,22 @@ try:
     
     top_genres = ', '.join(query_df['Genre'].tolist())
     print(f'\nRecommendation: Focus on {top_genres} due to their high revenue.\n')
+    print('=' * 40)
+    
+    # 2. Budget and Revenue Relationship
+        
+    sql_query2 = 'select title, budget, box_office as revenue from movie'
+        
+    query2_df = pd.read_sql_query(sql_query2, conn)
+    query2_df['revenue']  = pd.to_numeric(query2_df['revenue'], errors='coerce')
+    movies_avg = query2_df.mean(numeric_only=True).apply(lambda x: f'${x:,.2f}')
+        
+    print('\nBudget and Revenue for top 10 Movies:\n')
+    print(query2_df.head(10).to_string(index=False, formatters={'budget': '${:,.2f}'.format, 'revenue': '${:,.2f}'.format}))
+        
+    print('\nAverage Budget and Revenue for All Movies:\n')
+    print(movies_avg[['budget', 'revenue']].to_string())
+    print('=' * 40)
     
 except Exception as e:
     print(f'Database Error: {e}')
