@@ -2,7 +2,7 @@ import sqlite3
 import pandas as pd
 
 def get_connection():
-    """Returns a connection to the SQLite database. If the database file does not exist, it will be created."""
+    """Returns a connection to the SQLite database."""
     
     conn = sqlite3.connect('db/movies.db')
     conn.execute('PRAGMA foreign_keys = ON')
@@ -198,14 +198,20 @@ def setup_db():
             cursor.execute('SELECT COUNT(*) FROM director')
             print(f"Directors: {cursor.fetchone()[0]}")
         
+        return conn
+        
     except Exception as e:
-        print(f'Error connecting to the database: {e}')
-    
+            print(f'Error connecting to the database: {e}')
+
+if __name__ == '__main__':
+    try:
+        conn = setup_db()
+    except Exception as e:
+            print(f'Error connecting to the database: {e}')
+        
     finally:
         try:
             conn.close()
+            print('Connection closed.')
         except Exception as e:
             print(f'Connection unavailable: {e}')
-
-if __name__ == '__main__':
-    setup_db()
