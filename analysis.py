@@ -72,6 +72,22 @@ try:
     print(f'\nRecommendation: Focus on production of movies in {top_countries} due to their high average revenue.\n')
     print('=' * 40)
     
+    # 4. Most Successful Movies by Revenue
+        
+    sql_query4 = '''
+    select title as 'Movie Title', box_office as Revenue
+    from movie
+    where box_office is not null and box_office != 'unknown' 
+    order by box_office desc
+    limit 10'''
+        
+    query4_df = pd.read_sql_query(sql_query4, conn)
+    query4_format = query4_df.to_string(index=False, formatters={'Revenue': '${:,.2f}'.format})
+    
+    print('\n4. Top 10 Most Successful Movies by Revenue:\n')
+    print(query4_format)
+    print('=' * 40)
+    
     
 except Exception as e:
     print(f'Database Error: {e}')
@@ -116,7 +132,7 @@ try:
    
     plt.tight_layout()
     plt.savefig('output/top_countries_avg_revenue_bar_plot.png')
-    plt.show()
+    #plt.show()
     
 except NameError:
     print('Data not available for bar plot visualisation.')
