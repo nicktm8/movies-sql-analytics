@@ -102,3 +102,21 @@ try:
 
 except NameError:
     print('Data not available for scatter plot visualisation.')
+
+try:
+    plt.figure(figsize=(10, 6))
+    
+    query3_df['Revenue'] = (query3_df['Revenue'] / 1e6).round(2)
+    sns.set_theme(style='whitegrid')
+    sns.barplot(x='Country', y='Revenue', data=query3_df, hue='Revenue', palette='viridis', legend=True, edgecolor='black')
+    
+    plt.xlabel('Country')
+    plt.ylabel('Average Revenue (Millions $)')
+    plt.title('Top 5 Countries by Average Revenue', fontsize=14, fontweight='bold')
+   
+    plt.tight_layout()
+    plt.savefig('output/top_countries_avg_revenue_bar_plot.png')
+    plt.show()
+    
+except NameError:
+    print('Data not available for bar plot visualisation.')
