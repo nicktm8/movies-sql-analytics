@@ -43,6 +43,12 @@ try:
     print(movies_avg[['budget', 'revenue']].to_string())
     print('=' * 40)
     
+    # Calculating Pearson correlation between budget and revenue
+        
+    correlation = query2_df[['budget', 'revenue']].corr().iloc[0, 1]
+    print(f'\nPearson correlation between budget and revenue: {correlation:.2f}\n')
+    print('=' * 40)
+    
 except Exception as e:
     print(f'Database Error: {e}')
     
