@@ -36,12 +36,13 @@ try:
     query2_df['revenue']  = pd.to_numeric(query2_df['revenue'], errors='coerce')
     movies_avg = query2_df.mean(numeric_only=True).apply(lambda x: f'${x:,.2f}')
         
-    print('\nBudget and Revenue for top 10 Movies:\n')
+    print('\n2. Budget and Revenue for top 10 Movies:\n')
     print(query2_df.head(10).to_string(index=False, formatters={'budget': '${:,.2f}'.format, 'revenue': '${:,.2f}'.format}))
-        
+    print('-' * 40)
+    
     print('\nAverage Budget and Revenue for All Movies:\n')
     print(movies_avg[['budget', 'revenue']].to_string())
-    print('=' * 40)
+    print('-' * 40)
     
     # Calculating Pearson correlation between budget and revenue
         
@@ -57,3 +58,24 @@ finally:
         conn.close()
     except Exception as e:
         print(f'Connection unavailable: {e}')
+        
+try:
+    plt.figure(figsize=(10, 6))
+    
+    query2_df['budget'] = (query2_df['budget'] / 1e6).round(2)
+    query2_df['revenue'] = (query2_df['revenue'] / 1e6).round(2)
+    plt.scatter(query2_df['budget'], query2_df['revenue'], alpha=0.5, color='teal', edgecolor='black')
+    
+    plt.title(f'Relationship between Budget and Revenue (Correlation: {correlation:.2f})', fontsize=14, fontweight='bold')
+    plt.xlabel('Movie Budget (Millions $)', fontsize=12)
+    plt.ylabel('Box Office Revenue (Millions $)', fontsize=12)
+    
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.tight_layout()
+    
+    plt.savefig('output/budget_revenue_scatter_plot.png')
+    plt.show()
+    
+
+except NameError:
+    print('Data not available for scatter plot visualisation.')
