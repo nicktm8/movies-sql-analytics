@@ -50,6 +50,29 @@ try:
     print(f'\nPearson correlation between budget and revenue: {correlation:.2f}\n')
     print('=' * 40)
     
+    # 3. Country Production Analysis
+        
+    sql_query3 = '''
+    select c.name as Country, avg(m.box_office) as Revenue
+    from movie m
+    join movie_countries mc on mc.movie_id = m.movie_id
+    join country c on c.country_id = mc.country_id
+    group by Country
+    order by Revenue desc
+    limit 5;'''
+        
+    query3_df = pd.read_sql_query(sql_query3, conn)
+    query3_format = query3_df.to_string(index=False, formatters={'Revenue': '${:,.2f}'.format})
+        
+    print('\n3. Top 5 Countries by Average Revenue:\n')
+    print(query3_format)
+    
+    top_countries = ', '.join(query3_df['Country'].tolist())
+    
+    print(f'\nRecommendation: Focus on production of movies in {top_countries} due to their high average revenue.\n')
+    print('=' * 40)
+    
+    
 except Exception as e:
     print(f'Database Error: {e}')
     
@@ -74,7 +97,7 @@ try:
     plt.tight_layout()
     
     plt.savefig('output/budget_revenue_scatter_plot.png')
-    plt.show()
+    #plt.show()
     
 
 except NameError:
