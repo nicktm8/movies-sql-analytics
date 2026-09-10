@@ -14,6 +14,10 @@ to produce financial and production insights.
 ```
 movies-sql-analytics/
 │
+├── assets/
+│   ├── budget_revenue_scatter_plot.png
+│   └── top_countries_avg_revenue_bar_plot.png
+|
 ├── data/
 │   └── movies.csv              # Source dataset (raw movie data)
 │
