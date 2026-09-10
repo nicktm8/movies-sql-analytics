@@ -100,7 +100,7 @@ Calculates the Pearson correlation between budget and box office revenue and vis
 Pearson correlation between budget and revenue: 0.75
 ```
 
-![Budget vs Revenue](output/budget_revenue_scatter_plot.png)
+![Budget vs Revenue](assets/budget_revenue_scatter_plot.png)
 
 ### 3. Country Production Analysis
 
@@ -116,7 +116,7 @@ Top 5 Countries by Average Revenue:
 South Africa $210,800,000.00
 ```
 
-![Top 5 Countries](output/top_countries_avg_revenue_bar_plot.png)
+![Top 5 Countries](assets/top_countries_avg_revenue_bar_plot.png)
 
 ### 4. Top 10 Films by Revenue
 
